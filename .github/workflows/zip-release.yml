@@ -12,7 +12,7 @@ jobs:
     permissions:
       contents: write
     env:
-      ARCHIVE_NAME: UnequipWeaponModsAndAttachments-${{ github.ref_name }}.zip
+      ARCHIVE_NAME: AutoUnequipWeaponModsAndAttachments-${{ github.ref_name }}.zip
 
     steps:
       - uses: actions/checkout@v3
@@ -23,7 +23,7 @@ jobs:
         with:
           type: 'zip'
           filename: ${{ env.ARCHIVE_NAME }}
-          exclusions: '*.git* /*node_modules/* README.md .editorconfig'
+          exclusions: '*.git* README.md .editorconfig'
 
       - name: Release
         uses: softprops/action-gh-release@v1
