@@ -4,6 +4,33 @@
 //
 // All changed areas have a comment with vild: in it.
 
+// User configuration section
+class UnequipWeaponModsAndAttachementsConfig {
+  // Change the "true" to "false" if you don't want mods to be unequipped
+  // on selling or disassembling. Attachments will always be unequipped.
+  public final static func canUnequipMods() -> Bool = true;
+}
+
+// NO USER CONFIGURABLE OPTIONS BEYOND HERE
+
+class UnequipWeaponModsAndAttachementsHelper {
+  private final static func IsWeaponAttachmentSlot(slotId: TweakDBID) -> Bool {
+    switch slotId {
+      case t"AttachmentSlots.Scope":
+      case t"AttachmentSlots.ScopeRail":
+      case t"AttachmentSlots.PowerModule":
+        return true;
+    }
+    return false;
+  }
+
+  public final static func ShouldUnequip(slotId: TweakDBID, retrievable: Bool) -> Bool {
+    return UnequipWeaponModsAndAttachementsHelper.IsWeaponAttachmentSlot(slotId)
+        || UnequipWeaponModsAndAttachementsConfig.canUnequipMods()
+        || retrievable;
+  };
+}
+
 @replaceMethod(RPGManager)
 public final static func GetRetrievableAttachments(itemData: wref<gameItemData>) -> array<ItemAttachments> {
   let i: Int32;
@@ -28,9 +55,9 @@ public final static func GetRetrievableAttachments(itemData: wref<gameItemData>)
     while i < ArraySize(slotsToCheck) {
       itemData.GetItemPart(innerPart, slotsToCheck[i]);
       innerPartID = InnerItemData.GetItemID(innerPart);
-      // v1ld: skip check on parts tag of whether item is Retrievable
-      // partTags = InnerItemData.GetStaticData(innerPart).Tags();
-      if ItemID.IsValid(innerPartID) { // was: && ArrayContains(partTags, n"Retrievable") {
+      partTags = InnerItemData.GetStaticData(innerPart).Tags();
+      // v1ld: check based on attachment or if mods get to be unequipped too or finally, if it's marked retrievable
+      if ItemID.IsValid(innerPartID) && UnequipWeaponModsAndAttachementsHelper.ShouldUnequip(slotsToCheck[i], ArrayContains(partTags, n"Retrievable")) {
         ArrayPush(restoredAttachments, ItemAttachments.Create(innerPartID, slotsToCheck[i]));
       };
       i += 1;
@@ -115,9 +142,9 @@ private final const func ProcessDisassemblingPerks(amount: Int32, out disassembl
     while i < ArraySize(slotsToCheck) {
       itemData.GetItemPart(innerPart, slotsToCheck[i]);
       innerPartID = InnerItemData.GetItemID(innerPart);
-      // v1ld: skip check on parts tag of whether item is Retrievable
-      // partTags = InnerItemData.GetStaticData(innerPart).Tags();
-      if ItemID.IsValid(innerPartID) { // was: && ArrayContains(partTags, n"Retrievable") {
+      partTags = InnerItemData.GetStaticData(innerPart).Tags();
+      // v1ld: check based on attachment or if mods get to be unequipped too or finally, if it's marked retrievable
+      if ItemID.IsValid(innerPartID) && UnequipWeaponModsAndAttachementsHelper.ShouldUnequip(slotsToCheck[i], ArrayContains(partTags, n"Retrievable")) {
         ArrayPush(Deref(restoredAttachments), ItemAttachments.Create(innerPartID, slotsToCheck[i]));
       };
       i += 1;
