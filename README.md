@@ -5,13 +5,13 @@ Auto unequip all weapon mods and attachments when selling or disassembling them.
 
 You'll get two Looted notifications for each mod or attachment as a consequence of how the game does this - one notification is for the remove from weapon and one is for the add to inventory.  The actual amount you receive will be correct, however.  So you can safely ignore the duplicate notifications.
 
-Pre-Requisites
-==============
+Requirements
+============
 
-1. [redscript](https://www.nexusmods.com/cyberpunk2077/mods/1511)
+[redscript](https://www.nexusmods.com/cyberpunk2077/mods/1511) and its own dependencies - usually Red4Ext or cybercmd-standalone, but check redscript's mod page to see how to get it working.
 
 Installation
 ============
 
-1. Make sure redscript is installed and working, along with its own dependencies (usually Red4Ext or cybercmd-standalone is required).
+1. Make sure redscript is installed and working.
 2. Drag and drop the r6 folder into the root of your Cyberpunk 2077 installation.
